@@ -1,20 +1,55 @@
 # coding:utf-8
-import urllib2
-
+import urllib3,configparser
+import urllib.request
+import urllib.parse
+import json
 
 class HtmlDownLoader(object):
 
     def download(self, url):
         if url is None:
             return None
+        req = urllib.request.Request(url)
+        cf = configparser.ConfigParser()
+        cf.read("config.ini")
 
-        req = urllib2.Request(url)
-        req.add_header(
-            "User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36")
-        req.add_header("Cookie", 'd_c0="AEBAwryS9AmPTouCwBTehleje9c4zTrD5kY=|1463811851"; _za=ca3f98e1-a6f6-49cd-b794-6de5a093c624; _zap=b37cc280-3efd-43b2-ae8b-7fd56147514d; q_c1=a683095af3af488c80988902df7149a8|1474513333000|1463811851000; cap_id="NDk0Yjk0NGJhZWI4NDkxODljNTEwM2M3ZGQyYjY5Nzg=|1475560287|3b55652c69c2f43da10ea06bfcdeee78712d22ff"; l_cap_id="NDdkZDI0ZjkxMzllNDU2ZmJiMDMwZTc1MWI2YmMwNTE=|1475560287|f20c05508d200832193ac1c2a63e67e4b8817717"; login="OTQ0Mjc0MTNlZDcyNDE0MjgwOWRlMDhkZThjYTg4NWU=|1475560287|992fbd7d4b53952bb94617886637a8e645dbd8b3"; _xsrf=8303624aecad4b1920aa7c49ca80cbfa; __utma=51854390.525516098.1476586278.1476586278.1476586278.1; __utmb=51854390.10.10.1476586278; __utmc=51854390; __utmz=51854390.1476586278.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmv=51854390.100-1|2=registration_date=20121104=1^3=entry_date=20121104=1; a_t="2.0AABAldcZAAAXAAAAjnoqWAAAQJXXGQAAAEBAwryS9AkXAAAAYQJVTV_QGlgAtrc6NoObulHJ7W7jJRCXjG1qabLt7zLrQh0bCX2NHHflndxZbGqYqg=="; z_c0=Mi4wQUFCQWxkY1pBQUFBUUVEQ3ZKTDBDUmNBQUFCaEFsVk5YOUFhV0FDMnR6bzJnNXU2VWNudGJ1TWxFSmVNYldwcHNn|1476586894|d51796823bf8d3f3cbf0f07fff49071e91e0cc68')
-        Request = urllib2.urlopen(req)
+        req.add_header('Connection', 'keep-alive')
+        req.add_header('accept', 'application/json, text/plain, */*')
+        req.add_header('x-udid', 'AEBAwryS9AmPTouCwBTehleje9c4zTrD5kY=')
+        req.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36')
+        req.add_header('x-api-version', '3.0.40')
+        req.add_header('authorization', 'Bearer Mi4wQUFCQWxkY1pBQUFBUUVEQ3ZKTDBDUmNBQUFCaEFsVk5Nc2ZaV0FCMEJEeTBWTzlZWWJBR2pVby1kY3FoSndKNHpR|1488594969|d24837b40731e74a015d07f6815f1e4517ffdb67')
+        req.add_header('Referer', 'https://www.zhihu.com/people/teng-ge-li/activities')
+        req.add_header('Cache-Control', 'no-cache')
+
+        Request = urllib.request.urlopen(req)
+        if Request.getcode() != 200:
+            return None
+        data = Request.read()
+        return data
+
+    def getHtml(self, url):
+        if url is None:
+            return None
+
+        req = urllib3.Request(url)
+        Request = urllib3.urlopen(req)
 
         if Request.getcode() != 200:
             return None
+        data = Request.read()
 
-        return Request.read()
+        return data
+
+    def getPostHtml(self, url):
+        if url is None:
+            return None
+
+        headers = {
+            'user-agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36',
+            'referer':'https://www.zhihu.com/topic/19561513/hot',
+            'host':'www.zhihu.com','Origin':'http://www.zhihu.com',
+            'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
+            'Connection':'keep-alive','X-Requested-With':'XMLHttpRequest','Content-Length':'81',
+            'Accept-Encoding':'gzip,deflate','Accept-Language':'zh-CN,zh;q=0.8','Connection':'keep-alive'
+        }

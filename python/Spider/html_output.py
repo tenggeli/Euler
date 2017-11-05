@@ -1,7 +1,32 @@
 # coding:utf-8
+import ConfigParser
+import pymysql as MySQLdb
+
+
 class HtmlOutput(object):
 
     def __init__(self):
+
+        cf = ConfigParser.ConfigParser()
+        cf.read("config.ini")
+        host = cf.get("db", "host")
+        port = int(cf.get("db", "port"))
+        user = cf.get("db", "user")
+        passwd = cf.get("db", "passwd")
+        db_name = cf.get("db", "db")
+        charset = cf.get("db", "charset")
+        use_unicode = cf.get("db", "use_unicode")
+        self.db = MySQLdb.connect(
+            host=host,
+            port=port,
+            user=user,
+            passwd=passwd,
+            db=db_name,
+            charset=charset,
+            use_unicode=use_unicode
+        )
+
+        self.cursor = self.db.cursor()
         self.datas = []
 
     def collect_data(self, data):
@@ -10,20 +35,4 @@ class HtmlOutput(object):
         self.datas.append(data)
 
     def output_html(self):
-        fout = open('out.html', 'w')
-
-        fout.write("<html>")
-        fout.write("<body>")
-        fout.write("<table>")
-
-        for data in self.datas:
-            fout.write("<tr>")
-            fout.write("<td>%s</td>" % data['url'].encode('utf-8'))
-            fout.write("<td>%s</td>" % data['title'].encode('utf-8'))
-            fout.write("<td>%s</td>" % data['sum_node'].encode('utf-8'))
-            fout.write("</tr>")
-
-        fout.write("</table>")
-        fout.write("</body>")
-        fout.write("</html>")
-        fout.close()
+        # code

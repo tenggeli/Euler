@@ -1,4 +1,4 @@
-#codeing:utf-8
+# codeing:utf-8
 import MySQLdb
 
 conn = MySQLdb.Connect(
@@ -12,14 +12,9 @@ conn = MySQLdb.Connect(
 
 cursor = conn.cursor()
 sql = 'select * from test_python'
- cursor.execute(sql)
+cursor.execute(sql)
 
 print cursor.rowcount()
-
-rs = cursor.fetchone()
-rs = cursor.fetchmany(3)#获取几条数据
-
-rs = cursor.fetchall()#获取剩余所有数据
 
 # execute
 cursor.close()
